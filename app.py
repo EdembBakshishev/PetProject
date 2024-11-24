@@ -44,16 +44,16 @@ def post_detail(id):
     return render_template("post_detail.html", article=article)
 
 
-@app.route('/posts/<int:id>/del')
+@app.route('/posts/<int:id>/del', methods=['DELETE'])
 def post_delete(id):
     article = Article.query.get_or_404(id)
 
     try:
         db.session.delete(article)
         db.session.commit()
-        return redirect('/posts')
-    except:
-        return "При видаленні статті відбулась помилка"
+        return {"message": "Статья успешно удалена"}, 200
+    except Exception as e:
+        return {"error": str(e)}, 500
 
 
 @app.route('/posts/<int:id>/update', methods=['POST', 'GET'])

@@ -11,7 +11,31 @@
     <div class="alert alert-info">
         <p>{{ article.text }}</p>
         <p><b>Дата: {{ article.date.date() }}</b></p>
-        <a href="/posts/{{ article.id }}/del" class="btn btn-danger">Видалити</a>
+        <button class="btn btn-danger" onclick="deleteArticle({{ article.id }})">Видалити</button>
+
+            <script>
+                function deleteArticle(articleId) {
+                    fetch(`/posts/${articleId}/del`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            window.location.href = '/posts'; // Перенаправление на список статей
+                        } else {
+                            return response.json().then(data => {
+                                alert(data.error || 'Ошибка при удалении статьи');
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Ошибка соединения с сервером');
+                    });
+                }
+            </script>
         <a href="/posts/{{ article.id }}/update" class="btn btn-success">Редагувати</a>
 
     </div>
